@@ -70,6 +70,18 @@ export const fallbackProducts: Product[] = [
     rating: { rate: 3.9, count: 70 },
     inventory: 16,
   },
+  {
+    id: 1001,
+    title: "Classic Cotton T-Shirt",
+    description:
+      "A soft cotton everyday t-shirt with a comfortable fit. Demo listing with sample pricing and inventory.",
+    price: 24.99,
+    category: "men's clothing",
+    image:
+      "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=900&q=80",
+    rating: { rate: 4.6, count: 86 },
+    inventory: 24,
+  },
 ];
 
 const getFallbackProducts = (): Product[] => fallbackProducts;
@@ -78,10 +90,11 @@ export const getProducts = async (): Promise<Product[]> => {
   try {
     const response = await axios.get(API_URL);
     const data = response.data ?? [];
-    return data.map((item: Product) => ({
+    const products = data.map((item: Product) => ({
       ...item,
       inventory: item.inventory ?? Math.max(10, 100 - item.id * 6),
     }));
+    return [...fallbackProducts.filter((product) => product.id === 1001), ...products];
   } catch (error) {
     return getFallbackProducts();
   }
